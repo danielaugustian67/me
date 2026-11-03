@@ -7,6 +7,15 @@ on:
 
 concurrency: deploy-site
 
+env:
+  VPS_HOST: 43.134.103.221
+  VPS_USER: deploy-daniel
+  # Host key publik server, sudah dicocokkan dengan sidik jari di panduan VPS.
+  VPS_KNOWN_HOSTS: |
+    43.134.103.221 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFmE35hENZAf0KbAFJwC011jlvUn8BLdFFJiMcQsMW7e0vTXpZbmcVn3U4eU7IHznnNYzK+jLU2fPQYVrxYsW+o=
+    43.134.103.221 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAwToJyVtnxgMze84kojVr35uFDKR/bgdav9JyByQHwS
+    43.134.103.221 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDU2Gpz11bsfMO3EHfajt7YJiWMNHvaXVoiq2qRE1IYeJTALzQBAzEUEKlU+4zrXm2RGpQQMBVrmTzO+x/XOIIVyw3K24s2Ld1DlVub2yhrt6noUwrGTDyXfnL62iL2RMgwY7MctBnl0PUBiMrOzMLMH7DBDiXnWMeZBso1MoGV9SNOLxeFVDvyjwFc8xUrAOwL2NBsaONyRqL3BSeoXem8vVvINyoNuJ3YMmDhG6Fu6zqh87RSKkcsB5/DPnCN5WJe8VM5Iy5vyXrk9fFpcGwlYy8x7d5x2BUZg5VqIJzzcNj6xZ3dSl2WlVDhCOyuneblmtvgP7hB6gG0IdpWvRBVX1QgKqJFxku+ZkXoxhmSIfBVsfJusaigOzXp2/gOjxXygXUa9sKQPU22iMuZyeNxYBexg88BnFNBURhqREApWCnNgdSpmgFMHdgtQvhML5hl+w6elCtZhlVe1GVVvB6fus6tbpFMlqMnFVuD71l9qT9it9nDz/V8nRvzkihW4fE=
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,10 +32,10 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          echo "${{ vars.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          echo "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
       # Tanpa -p/-g: folder di server memakai setgid grup caddy, dan deploy-daniel bukan anggotanya,
       # jadi chmod dari rsync akan menghapus setgid dan Caddy tidak bisa membaca file baru.
       - name: Kirim situs
         run: |
           rsync -rltz --delete-delay dist/ \
-            ${{ vars.VPS_USER }}@${{ vars.VPS_HOST }}:/srv/deploy-daniel/portfolio/
+            "$VPS_USER@$VPS_HOST":/srv/deploy-daniel/portfolio/
