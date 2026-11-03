@@ -47,9 +47,9 @@ export const home = {
   ],
   reelText: 'Made to Move.',
   reel: [
-    { src: img('reel-nihondex'), alt: 'Nihondex, an app for learning Japanese and Korean' },
-    { src: img('reel-meowshot'), alt: 'Meowshot, an app for collecting street cats on a map' },
-    { src: img('reel-camora'), alt: 'Camora, a photobooth that runs in the browser' },
+    { href: '/work/nihondex', src: img('reel-nihondex'), alt: 'Nihondex, an app for learning Japanese and Korean' },
+    { href: '/work/meowshot', src: img('reel-meowshot'), alt: 'Meowshot, an app for collecting street cats on a map' },
+    { href: '/work/camora', src: img('reel-camora'), alt: 'Camora, a photobooth that runs in the browser' },
   ],
   servicesTitle: 'Services',
   servicesNote: 'Need something built, or something that already exists to stop breaking? Here is what I usually help with.',

@@ -53,7 +53,7 @@ const soloCols = (value: string) =>
       <div class="marquee marquee--ghost" data-marquee="-1"><span>{home.reelText}</span></div>
     </div>
     <div class="reel__frames">
-      {home.reel.map((r) => <figure class="reel__frame" data-parallax><img src={r.src} alt={r.alt} loading="lazy" decoding="async" /></figure>)}
+      {home.reel.map((r) => <a class="reel__frame" href={r.href} data-parallax data-cursor="arrow"><img src={r.src} alt={r.alt} loading="lazy" decoding="async" /></a>)}
     </div>
   </section>
 
