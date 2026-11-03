@@ -26,14 +26,6 @@ const digitCols = Array.from({ length: places }, (_, place) => {
 const soloCols = (value: string) =>
   [...value].map((d) => [...Array.from({ length: FILLER }, (_, f) => String((Number(d) + 7 + f * 3) % 10)), d]);
 
-const logoShapes = [
-  '<circle cx="12" cy="12" r="10"/>',
-  '<path d="M12 2 22 22H2Z"/>',
-  '<rect x="3" y="3" width="18" height="18" rx="4"/>',
-  '<path d="M2 12a10 10 0 0 1 20 0Z"/>',
-  '<path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/>',
-  '<path d="M3 3h8v8H3zM13 13h8v8h-8z"/>',
-];
 ---
 
 <Base>
@@ -178,23 +170,6 @@ const logoShapes = [
     </div>
   </section>
 
-  <section class="partners">
-    <div class="partners__sticky">
-      <h2 class="partners__title h-xl">{home.partnersTitle}</h2>
-    </div>
-    <div class="partners__grid" data-stagger>
-      {
-        home.partners.map((name, i) => (
-          <div class="partners__logo">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" set:html={logoShapes[i % logoShapes.length]} />
-            <span>{name}</span>
-          </div>
-        ))
-      }
-    </div>
-    <p class="partners__note note">{home.partnersNote}</p>
-  </section>
-
   <section class="fullimg" aria-hidden="true">
     <div class="fullimg__frame"><img src={home.fullImage} alt="" loading="lazy" decoding="async" /></div>
   </section>
@@ -251,47 +226,6 @@ const logoShapes = [
           ))
         }
       </div>
-    </div>
-  </section>
-
-  <section class="split" data-pricing>
-    <aside class="split__aside">
-      <div class="pricing__top">
-        <h2 class="h-lg" data-words>Pricing</h2>
-        <div class="toggle" role="group" aria-label="Billing period">
-          <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
-          <button type="button" data-period="yearly" aria-pressed="true">Yearly {home.yearlyDiscount}</button>
-        </div>
-      </div>
-      <p class="note">{home.pricingNote}</p>
-    </aside>
-    <div>
-      {
-        home.plans.map((plan) => (
-          <article class="plan">
-            <h3 class="h-md" data-words>{plan.name}</h3>
-            <p class="plan__text">{plan.text}</p>
-            <ul class="plan__features" data-stagger>
-              {plan.features.map((f) => (
-                <li>
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
-                    <circle cx="10" cy="10" r="8.5" />
-                    <path d="M6.5 10.2l2.4 2.4 4.6-5" />
-                  </svg>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <p class="plan__from">STARTING FROM</p>
-            <p class="plan__price">
-              <span>
-                <span class="plan__amount" data-monthly={plan.monthly} data-yearly={plan.yearly}>${plan.yearly.toLocaleString('en-US')}</span><span class="plan__unit">/month</span>
-              </span>
-              <span class="plan__old">${plan.monthly.toLocaleString('en-US')}</span>
-            </p>
-          </article>
-        ))
-      }
     </div>
   </section>
 

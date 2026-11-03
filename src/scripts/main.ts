@@ -365,16 +365,6 @@ function initNumbers() {
   });
 }
 
-function initPartners() {
-  const title = document.querySelector('.partners__title');
-  if (!title || reduced) return;
-  gsap.to(title, {
-    opacity: 0.05,
-    ease: 'none',
-    scrollTrigger: { trigger: '.partners__grid', start: 'top 80%', end: 'top 25%', scrub: true },
-  });
-}
-
 function initFullImage() {
   const frame = document.querySelector('.fullimg__frame');
   if (!frame || reduced) return;
@@ -440,22 +430,6 @@ function initQuotes() {
       },
     });
   }
-}
-
-function initPricing() {
-  const root = document.querySelector<HTMLElement>('[data-pricing]');
-  if (!root) return;
-  const buttons = $$<HTMLButtonElement>('[data-period]', root);
-  const amounts = $$('.plan__amount', root);
-  const set = (period: string) => {
-    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.period === period)));
-    root.classList.toggle('is-monthly', period === 'monthly');
-    amounts.forEach((a) => {
-      a.textContent = `$${Number(a.dataset[period]).toLocaleString('en-US')}`;
-      if (!reduced) gsap.fromTo(a, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: EASE });
-    });
-  };
-  buttons.forEach((b) => b.addEventListener('click', () => set(b.dataset.period!)));
 }
 
 function initFaq() {
@@ -571,11 +545,9 @@ initScatter();
 initMarquees();
 initReveals();
 initNumbers();
-initPartners();
 initFullImage();
 initProcess();
 initQuotes();
-initPricing();
 initFaq();
 initSlits();
 initPan();
