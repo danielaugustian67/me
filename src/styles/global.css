@@ -998,7 +998,6 @@ button:hover .arrow {
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
-  transform-origin: left center;
 }
 
 .process__steps {
@@ -1984,8 +1983,10 @@ select.field:valid {
   }
 
   .gantt__bar {
-    padding-inline: 8px;
+    padding-inline: 6px;
     font-size: 11px;
+    line-height: 1.2;
+    white-space: normal;
   }
 
   .gantt__lines span {

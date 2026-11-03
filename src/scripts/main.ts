@@ -386,9 +386,9 @@ function initProcess() {
   const bars = $$('.gantt__bar', gantt);
   gsap.fromTo(
     bars,
-    { scaleX: 0 },
+    { clipPath: 'inset(0 100% 0 0)' },
     {
-      scaleX: 1,
+      clipPath: 'inset(0 0% 0 0)',
       stagger: 0.2,
       ease: 'power2.out',
       scrollTrigger: { trigger: gantt, start: 'top 85%', end: 'bottom 55%', scrub: 0.6 },
