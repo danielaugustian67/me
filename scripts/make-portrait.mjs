@@ -14,7 +14,6 @@ const BLACK = 16; // Background pixels are at most this bright.
 
 const cards = [
   ['portrait', '#ddcfb6', '#c2b091'],
-  ['portrait-about', '#7d8fa0', '#566675'],
 ];
 
 const source = process.argv[2];

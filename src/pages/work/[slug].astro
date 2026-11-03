@@ -1,7 +1,7 @@
 ---
 import Pill from '../../components/Pill.astro';
 import Base from '../../layouts/Base.astro';
-import { projects } from '../../data/site';
+import { projects, tallSrcset, wideSrcset } from '../../data/site';
 
 export function getStaticPaths() {
   return projects.map((project, i) => ({
@@ -16,7 +16,7 @@ const { project, next } = Astro.props;
 <Base title={project.name} description={project.summary}>
   <p class="project__year" aria-hidden="true">{project.year}</p>
   <section class="project__hero">
-    <div class="project__cover" data-clip><img src={project.tall} alt="" decoding="async" /></div>
+    <div class="project__cover" data-clip><img src={project.tall} srcset={tallSrcset(project.tall)} sizes="(max-width: 809px) 100vw, 40vw" alt="" decoding="async" /></div>
     <div class="project__info">
       <h1 class="h-lg" data-words>{project.name}</h1>
       <p class="body" data-fade>{project.summary}</p>
@@ -37,7 +37,7 @@ const { project, next } = Astro.props;
   </section>
 
   <section class="project__gallery">
-    {project.gallery.map((src) => <div class="frame" data-clip><img src={src} alt="" loading="lazy" decoding="async" /></div>)}
+    {project.gallery.map((src) => <div class="frame" data-clip><img src={src} srcset={wideSrcset(src)} sizes="100vw" alt="" loading="lazy" decoding="async" /></div>)}
   </section>
 
   {
@@ -64,6 +64,6 @@ const { project, next } = Astro.props;
     <div class="next__marquee" aria-hidden="true">
       <div class="marquee" data-marquee="1"><span>Next Project</span></div>
     </div>
-    <div class="next__frame"><img src={next.wide} alt="" loading="lazy" decoding="async" /></div>
+    <div class="next__frame"><img src={next.tall} srcset={tallSrcset(next.tall)} sizes="(max-width: 809px) 70vw, min(33vw, 480px)" alt="" loading="lazy" decoding="async" /></div>
   </a>
 </Base>

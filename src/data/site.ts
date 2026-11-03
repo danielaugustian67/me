@@ -2,6 +2,10 @@
 
 const img = (name: string) => `/img/${name}.webp`;
 
+/** Widths made by scripts/make-responsive.mjs, so small screens don't download the full image. */
+export const wideSrcset = (src: string) => `${src.replace('.webp', '-640.webp')} 640w, ${src.replace('.webp', '-960.webp')} 960w, ${src.replace('.webp', '-1280.webp')} 1280w, ${src} 1920w`;
+export const tallSrcset = (src: string) => `${src.replace('.webp', '-500.webp')} 500w, ${src} 1000w`;
+
 /** Months worked, counting both the first and the last month ('2024-08' to '2024-12' is 5). No end means up to now. */
 const monthsBetween = (from: string, to?: string) => {
   const [fy, fm] = from.split('-').map(Number);
