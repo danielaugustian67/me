@@ -13,7 +13,7 @@ import { projects } from '../../data/site';
     </div>
     {
       projects.map((p) => (
-        <a class="pan__item" href={`/work/${p.slug}`} data-landscape={String(p.landscape)} aria-label={p.name}>
+        <a class="pan__item" data-cursor="arrow" href={`/work/${p.slug}`} data-landscape={String(p.landscape)} aria-label={p.name}>
           <img src={p.image} alt="" decoding="async" draggable="false" />
           <span class="pan__label">{p.name}</span>
         </a>

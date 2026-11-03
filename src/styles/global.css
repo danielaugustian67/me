@@ -530,6 +530,27 @@ button:hover .arrow {
 }
 
 /* Hero */
+.cursor {
+  position: fixed;
+  z-index: 60;
+  top: -60px;
+  left: -60px;
+  display: grid;
+  width: 120px;
+  height: 120px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.cursor .arrow {
+  width: 32px;
+  height: 32px;
+}
+
 .hero {
   position: relative;
   height: 100vh;
@@ -569,8 +590,16 @@ button:hover .arrow {
   transform: rotate(var(--r));
 }
 
-.js .hero__img {
+.js .hero__img,
+.js .hero__intro,
+.js .hero__title,
+.js .hero__years {
   visibility: hidden;
+}
+
+.hero__link {
+  position: absolute;
+  inset: 3.1% 0;
 }
 
 /* Keeps dark photos from melting into the dark page. */
@@ -871,6 +900,7 @@ button:hover .arrow {
 }
 
 .aboutme__img {
+  display: block;
   aspect-ratio: 3 / 4;
 }
 
@@ -1976,6 +2006,10 @@ select.field:valid {
     width: calc((100vw - 2 * var(--g)) * 0.8856);
     margin: calc(18px + 13.1vw) auto;
     transform: none;
+  }
+
+  .hero__link {
+    inset: 12% 9.4%;
   }
 
   .hero__title {

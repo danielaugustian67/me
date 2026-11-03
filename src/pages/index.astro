@@ -39,8 +39,9 @@ const logoShapes = [
 <Base>
   <section class="hero">
     <p class="hero__intro">{site.intro}</p>
-    <div class="hero__stack" aria-hidden="true">
+    <div class="hero__stack">
       {home.heroImages.map((src) => <img class="hero__img" src={src} alt="" decoding="async" />)}
+      <a class="hero__link" href="/work" aria-label="See the work" data-cursor="arrow"></a>
     </div>
     <h1 class="hero__title h-xxl" data-fit="0.8"><span class="hero__word">{site.brand}<span class="mark">{site.mark}</span></span></h1>
     <p class="hero__years">{site.years}</p>
@@ -168,7 +169,7 @@ const logoShapes = [
         {
           home.aboutImages.map((a) => (
             <figure>
-              <div class="aboutme__img" data-clip><img src={a.src} alt="" loading="lazy" decoding="async" /></div>
+              <a class="aboutme__img" href="/about" aria-label={`About ${a.label}`} data-clip data-cursor="arrow"><img src={a.src} alt="" loading="lazy" decoding="async" /></a>
               <figcaption class="caption note"><b style="color:var(--fg)">{a.label}</b>{a.role}</figcaption>
             </figure>
           ))
@@ -308,7 +309,7 @@ const logoShapes = [
         {
           notes.map((n) => (
             <a class="card" href={`/notes/${n.slug}`}>
-              <span class="card__img" data-clip><img src={n.image} alt="" loading="lazy" decoding="async" /></span>
+              <span class="card__img" data-clip data-cursor="arrow"><img src={n.image} alt="" loading="lazy" decoding="async" /></span>
               <time class="card__date">{n.date}</time>
               <h3 class="card__title h-sm">{n.title}</h3>
               <p class="card__text">{n.excerpt}</p>

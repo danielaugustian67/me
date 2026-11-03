@@ -9,6 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => [...root.querySelectorAll<T>(sel)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isPhone = () => matchMedia('(max-width: 809px)').matches;
+const canHover = () => matchMedia('(hover: hover) and (pointer: fine)').matches;
 const EASE = 'expo.out';
 // Not `once: true`: a trigger that kills itself while being created breaks ScrollTrigger
 // when the page loads already scrolled past it (reloads, back navigation).
@@ -129,26 +130,84 @@ function initReveals() {
   }
 }
 
+const CURSOR_SCALE: Record<string, number> = { dot: 1 / 6, hide: 1 / 60, arrow: 1 };
+
+/** A dot that trails the mouse, hides over controls and grows into an arrow over large links. */
+function initCursor() {
+  const cursor = document.querySelector<HTMLElement>('.cursor');
+  if (!cursor || reduced || !canHover()) return;
+  const arrow = cursor.firstElementChild!;
+  const setX = gsap.quickSetter(cursor, 'x', 'px');
+  const setY = gsap.quickSetter(cursor, 'y', 'px');
+  let x = 0;
+  let y = 0;
+  let tx = 0;
+  let ty = 0;
+  let inside = false;
+  gsap.set(cursor, { scale: CURSOR_SCALE.dot });
+  gsap.set(arrow, { autoAlpha: 0 });
+
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    tx = e.clientX;
+    ty = e.clientY;
+    if (inside) return;
+    inside = true;
+    x = tx;
+    y = ty;
+    gsap.to(cursor, { autoAlpha: 1, duration: 0.2 });
+  });
+  document.documentElement.addEventListener('mouseleave', () => {
+    inside = false;
+    gsap.to(cursor, { autoAlpha: 0, duration: 0.2 });
+  });
+  gsap.ticker.add(() => {
+    const k = 1 - 0.9 ** gsap.ticker.deltaRatio();
+    x += (tx - x) * k;
+    y += (ty - y) * k;
+    setX(x);
+    setY(y);
+  });
+
+  // Links and controls hide the dot, except for the large ones marked `data-cursor="arrow"`.
+  let current = 'dot';
+  document.addEventListener('pointerover', (e) => {
+    const el = (e.target as Element).closest<HTMLElement>('[data-cursor], a, button, input, textarea, select');
+    const next = el ? el.dataset.cursor ?? 'hide' : 'dot';
+    if (next === current) return;
+    current = next;
+    gsap.to(cursor, { scale: CURSOR_SCALE[next], duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to(arrow, { autoAlpha: next === 'arrow' ? 1 : 0, duration: 0.25, overwrite: 'auto' });
+  });
+}
+
 function initHero() {
   const stack = document.querySelector<HTMLElement>('.hero__stack');
   if (!stack) return;
   const images = $$('.hero__img', stack);
   const rotations = [-5, -20, -10, 5];
+  const fanned = [0, -30, -15, 15];
   images.forEach((img, i) => gsap.set(img, { rotate: rotations[i % rotations.length] }));
+  gsap.set('.hero__intro, .hero__title, .hero__years', { autoAlpha: 1 });
   if (reduced) {
     gsap.set(images, { autoAlpha: 1 });
     return;
   }
   const letters = splitWords(document.querySelector<HTMLElement>('.hero__word')!, maskedWord);
   const tl = gsap.timeline({ defaults: { ease: EASE } });
-  tl.fromTo(
-    images,
-    { autoAlpha: 0, y: '55vh', rotate: 0, scale: 0.85 },
-    { autoAlpha: 1, y: 0, rotate: (i) => rotations[i % rotations.length], scale: 1, duration: 1.4, stagger: 0.17 },
-    0.1,
-  );
-  tl.from(letters.map((w) => w.firstElementChild), { yPercent: 110, duration: 1.3 }, 0.25);
-  tl.from('.hero__intro, .hero__years', { autoAlpha: 0, y: 14, duration: 1 }, 0.5);
+  // The title lands first, then the cards rise from below the screen one by one.
+  tl.from(letters.map((w) => w.firstElementChild), { yPercent: 110, duration: 1.3 }, 0.1);
+  tl.fromTo(images, { autoAlpha: 1, y: '100vh' }, { y: 0, duration: 1.1, ease: 'power3.out', stagger: 0.1 }, 1);
+  tl.from('.hero__intro', { clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'power2.out', clearProps: 'clipPath' }, 1);
+  tl.from('.hero__years', { clipPath: 'inset(0 0 100% 0)', duration: 0.6, ease: 'power2.out', clearProps: 'clipPath' }, 1.5);
+
+  if (canHover()) {
+    const fan = (angles: number[]) => () =>
+      gsap.to(images, { rotate: (i) => angles[i % angles.length], duration: 0.75, ease: 'power2.out', overwrite: 'auto' });
+    const link = stack.querySelector('.hero__link')!;
+    link.addEventListener('mouseenter', fan(fanned));
+    link.addEventListener('mouseleave', fan(rotations));
+  }
 
   if (isPhone()) return;
   gsap.to(stack, {
@@ -506,6 +565,7 @@ initClock();
 initTheme();
 initMenu(lenis);
 initForms();
+initCursor();
 initHero();
 initScatter();
 initMarquees();
