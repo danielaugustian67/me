@@ -17,7 +17,8 @@ const PLAY_ONCE = { toggleActions: 'play none none none' };
 
 function initLenis() {
   if (reduced || document.documentElement.dataset.lenis === 'off') return null;
-  const lenis = new Lenis({ lerp: 0.1 });
+  // 0.1 felt laggy on scroll-driven animations; a higher lerp follows the wheel more closely.
+  const lenis = new Lenis({ lerp: 0.16, wheelMultiplier: 1 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
@@ -32,7 +33,7 @@ function fitText() {
     const fullWidth = hero && isPhone();
     let target = box.clientWidth * Number(el.dataset.fit);
     if (fullWidth) target = box.clientWidth - 2 * parseFloat(getComputedStyle(el).marginLeft);
-    // Leaves room for the years beside the title.
+    // Leaves room for the clock in the bottom corner beside the title.
     else if (hero) target = Math.min(innerWidth - (innerWidth < 1200 ? 242 : 263), 1400);
     el.style.fontSize = '100px';
     el.style.display = 'inline-block';
@@ -188,7 +189,7 @@ function initHero() {
   const rotations = [-5, -20, -10, 5];
   const fanned = [0, -30, -15, 15];
   images.forEach((img, i) => gsap.set(img, { rotate: rotations[i % rotations.length] }));
-  gsap.set('.hero__intro, .hero__title, .hero__years', { autoAlpha: 1 });
+  gsap.set('.hero__intro, .hero__title', { autoAlpha: 1 });
   if (reduced) {
     gsap.set(images, { autoAlpha: 1 });
     return;
@@ -199,7 +200,6 @@ function initHero() {
   tl.from(letters.map((w) => w.firstElementChild), { yPercent: 110, duration: 1.3 }, 0.1);
   tl.fromTo(images, { autoAlpha: 1, y: '100vh' }, { y: 0, duration: 1.1, ease: 'power3.out', stagger: 0.1 }, 1);
   tl.from('.hero__intro', { clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'power2.out', clearProps: 'clipPath' }, 1);
-  tl.from('.hero__years', { clipPath: 'inset(0 0 100% 0)', duration: 0.6, ease: 'power2.out', clearProps: 'clipPath' }, 1.5);
 
   if (canHover()) {
     const fan = (angles: number[]) => () =>
@@ -241,7 +241,9 @@ function initScatter() {
       return s;
     });
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom bottom', scrub: 0.6 },
+      // Starts once the stage is pinned, so the words don't move while the section itself is still scrolling in.
+      // scrub: true because Lenis already smooths the scroll; a second delay made the words lag and surge.
+      scrollTrigger: { trigger: section, start: 'top top', end: 'bottom bottom', scrub: true },
     });
     words.forEach((w) => {
       tl.from(
@@ -249,7 +251,8 @@ function initScatter() {
         {
           x: `${(rand() - 0.5) * 110}vw`,
           y: `${(rand() - 0.25) * 130}vh`,
-          ease: 'power2.out',
+          ease: 'power1.inOut',
+          force3D: true,
           duration: 0.5 + rand() * 0.25,
         },
         0,
@@ -365,21 +368,6 @@ function initNumbers() {
   });
 }
 
-function initFullImage() {
-  const frame = document.querySelector('.fullimg__frame');
-  if (!frame || reduced) return;
-  gsap.from(frame, {
-    scale: 0.82,
-    ease: 'none',
-    scrollTrigger: { trigger: frame, start: 'top bottom', end: 'top 15%', scrub: true },
-  });
-  gsap.fromTo(
-    frame.querySelector('img'),
-    { scale: 1.2 },
-    { scale: 1, ease: 'none', scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true } },
-  );
-}
-
 function initProcess() {
   const gantt = document.querySelector('.gantt');
   if (!gantt || reduced) return;
@@ -396,57 +384,16 @@ function initProcess() {
   );
 }
 
-function initQuotes() {
-  const root = document.querySelector<HTMLElement>('[data-quotes]');
-  if (!root) return;
-  const quotes = $$('.quote', root);
-  const counter = root.querySelector('.quotes__n')!;
-  quotes.forEach((q) => {
-    const text = q.querySelector<HTMLElement>('.quote__text')!;
-    if (!reduced) splitWords(text, maskedWord);
+function initQuote() {
+  const text = document.querySelector<HTMLElement>('.quote__text');
+  if (!text || reduced) return;
+  splitWords(text, maskedWord);
+  ScrollTrigger.create({
+    trigger: text,
+    start: 'top 75%',
+    once: true,
+    onEnter: () => gsap.fromTo(text.querySelectorAll('.w__i'), { yPercent: 115 }, { yPercent: 0, duration: 0.95, ease: EASE, stagger: 0.012 }),
   });
-  let index = 0;
-  const show = (next: number, first = false) => {
-    quotes[index].classList.remove('is-active');
-    index = (next + quotes.length) % quotes.length;
-    const q = quotes[index];
-    q.classList.add('is-active');
-    counter.textContent = `/${index + 1}`;
-    if (reduced || first) return;
-    gsap.fromTo(q.querySelectorAll('.w__i'), { yPercent: 115 }, { yPercent: 0, duration: 0.95, ease: EASE, stagger: 0.012, overwrite: true });
-    gsap.fromTo(q.querySelector('.quote__who'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, delay: 0.25, ease: EASE });
-  };
-  show(0, true);
-  root.querySelector('[data-prev]')!.addEventListener('click', () => show(index - 1));
-  root.querySelector('[data-next]')!.addEventListener('click', () => show(index + 1));
-  if (!reduced) {
-    let seen = false;
-    ScrollTrigger.create({
-      trigger: root,
-      start: 'top 75%',
-      onEnter: () => {
-        if (!seen) show(index);
-        seen = true;
-      },
-    });
-  }
-}
-
-function initFaq() {
-  for (const item of $$('.faq__item')) {
-    const btn = item.querySelector('button')!;
-    const panel = item.querySelector<HTMLElement>('.faq__a')!;
-    btn.addEventListener('click', () => {
-      const open = item.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', String(open));
-      gsap.to(panel, {
-        height: open ? 'auto' : 0,
-        duration: reduced ? 0 : 0.7,
-        ease: 'expo.inOut',
-        onComplete: () => ScrollTrigger.refresh(),
-      });
-    });
-  }
 }
 
 function initSlits() {
@@ -545,10 +492,8 @@ initScatter();
 initMarquees();
 initReveals();
 initNumbers();
-initFullImage();
 initProcess();
-initQuotes();
-initFaq();
+initQuote();
 initSlits();
 initPan();
 

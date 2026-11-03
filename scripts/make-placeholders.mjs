@@ -19,6 +19,9 @@ const palettes = {
   steel: ['#5b6b78', '#a9b8c4', '#26323c', '#e6edf2'],
   sand: ['#cbb9a4', '#ece2d6', '#8c7762', '#f7f2ec'],
   ink: ['#14161c', '#3a4150', '#8a93a6', '#14161c'],
+  // Stronger than `yellow` and `coral`, so the stat digits stay readable on a white page.
+  gold: ['#f2b705', '#ffd21f', '#d99a00', '#ffdf4d'],
+  red: ['#d9261c', '#f0483e', '#a80f12', '#ff6a58'],
 };
 
 const rand = (seed) => {
@@ -54,30 +57,11 @@ const WIDE = [1920, 1200];
 const images = [
   // hero stack
   ...['sand', 'black', 'yellow'].map((palette, i) => [`hero-${i + 1}`, PORTRAIT, palette]),
-  // reel frames
-  ['reel-1', WIDE, 'lilac'],
-  ['reel-2', WIDE, 'ink'],
-  ['reel-3', WIDE, 'pink'],
   // masked numbers
-  ['stat-1', WIDE, 'steel'],
-  ['stat-2', WIDE, 'orange'],
-  ['stat-3', WIDE, 'blue'],
-  // about
-  ['about-2', PORTRAIT, 'sand'],
-  ['full', [2200, 1400], 'steel'],
-  // projects
-  ...['yellow', 'black', 'blue', 'green', 'coral', 'lilac', 'pink', 'orange', 'ink', 'steel', 'sand', 'blue'].map(
-    (palette, i) => [`work-${String(i + 1).padStart(2, '0')}`, i % 3 === 1 ? LANDSCAPE : PORTRAIT, palette],
-  ),
-  ['work-detail-1', WIDE, 'lilac'],
-  ['work-detail-2', WIDE, 'coral'],
-  ['work-detail-3', PORTRAIT, 'green'],
-  // notes
-  ...['sand', 'ink', 'steel', 'pink'].map((palette, i) => [`note-${i + 1}`, PORTRAIT, palette]),
-  // about page
-  ...['steel', 'sand', 'ink', 'pink', 'blue', 'green'].map((palette, i) => [`gallery-${i + 1}`, PORTRAIT, palette]),
-  ['studio-1', WIDE, 'sand'],
-  ['studio-2', PORTRAIT, 'steel'],
+  ['stat-gray', WIDE, 'steel'],
+  ['stat-yellow', WIDE, 'gold'],
+  ['stat-blue', WIDE, 'blue'],
+  ['stat-red', WIDE, 'red'],
   ['og', [1200, 630], 'ink'],
 ];
 

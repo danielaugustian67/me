@@ -1,10 +1,9 @@
 ---
-import Arrow from '../components/Arrow.astro';
 import Pill from '../components/Pill.astro';
 import TalkForm from '../components/TalkForm.astro';
 import TextLink from '../components/TextLink.astro';
 import Base from '../layouts/Base.astro';
-import { home, notes, site } from '../data/site';
+import { home, site } from '../data/site';
 
 const letters = 'ABCDEFGH';
 
@@ -36,7 +35,6 @@ const soloCols = (value: string) =>
       <a class="hero__link" href="/work" aria-label="See the work" data-cursor="arrow"></a>
     </div>
     <h1 class="hero__title h-xxl" data-fit="0.8"><span class="hero__word">{site.brand}<span class="mark">{site.mark}</span></span></h1>
-    <p class="hero__years">{site.years}</p>
   </section>
 
   <section class="scatter" data-scatter>
@@ -55,7 +53,7 @@ const soloCols = (value: string) =>
       <div class="marquee marquee--ghost" data-marquee="-1"><span>{home.reelText}</span></div>
     </div>
     <div class="reel__frames">
-      {home.reel.map((src) => <figure class="reel__frame" data-parallax><img src={src} alt="" loading="lazy" decoding="async" /></figure>)}
+      {home.reel.map((r) => <figure class="reel__frame" data-parallax><img src={r.src} alt={r.alt} loading="lazy" decoding="async" /></figure>)}
     </div>
   </section>
 
@@ -119,34 +117,14 @@ const soloCols = (value: string) =>
                 ))
               }
             </div>
-            <h3 class="h-md pre">{`${stat.value} ${stat.title}`}</h3>
+            <span class="numbers__logo"><img src={stat.logo.src} alt={stat.logo.alt} loading="lazy" /></span>
+            <h3 class="h-md pre">{`${Number(stat.value)} ${stat.title}`}</h3>
             <p class="body">{stat.text}</p>
             <Pill href={stat.cta.href} label={stat.cta.label} />
           </article>
         ))
       }
     </div>
-  </section>
-
-  <section class="split">
-    <aside class="split__aside">
-      <h2 class="h-lg" data-words>Selected<br />Awards</h2>
-      <div>
-        <p class="note">{home.recognitionNote}</p>
-        <div style="margin-top:24px"><TextLink href="/work" label="See the Work" /></div>
-      </div>
-    </aside>
-    <ul class="rec__list" data-stagger>
-      {
-        home.recognition.map((r) => (
-          <li class="rec__row">
-            <b>{r.name}</b>
-            <span>{r.detail}</span>
-            <em>{r.count}</em>
-          </li>
-        ))
-      }
-    </ul>
   </section>
 
   <section class="split split--mid">
@@ -157,21 +135,7 @@ const soloCols = (value: string) =>
     <div class="aboutme__body">
       <h2 class="h-lg" data-words>{home.aboutTitle}</h2>
       <p class="body aboutme__text" data-fade>{home.aboutText}</p>
-      <div class="aboutme__images">
-        {
-          home.aboutImages.map((a) => (
-            <figure>
-              <a class="aboutme__img" href="/about" aria-label={`About ${a.label}`} data-clip data-cursor="arrow"><img src={a.src} alt="" loading="lazy" decoding="async" /></a>
-              <figcaption class="caption note"><b style="color:var(--fg)">{a.label}</b>{a.role}</figcaption>
-            </figure>
-          ))
-        }
-      </div>
     </div>
-  </section>
-
-  <section class="fullimg" aria-hidden="true">
-    <div class="fullimg__frame"><img src={home.fullImage} alt="" loading="lazy" decoding="async" /></div>
   </section>
 
   <section class="process">
@@ -208,49 +172,8 @@ const soloCols = (value: string) =>
     <div class="section-title wrap">
       <h2 class="h-xl" data-words>{home.quotesTitle}</h2>
     </div>
-    <div class="quotes__body" data-quotes>
-      <div class="quotes__index">
-        <div class="quotes__nav">
-          <button type="button" data-prev aria-label="Previous testimonial"><Arrow /></button>
-          <button type="button" data-next aria-label="Next testimonial"><Arrow /></button>
-        </div>
-        <p class="quotes__n ghost" aria-live="polite">/1</p>
-      </div>
-      <div class="quotes__stage">
-        {
-          home.quotes.map((q, i) => (
-            <figure class:list={['quote', { 'is-active': i === 0 }]}>
-              <blockquote class="quote__text">“{q.text}”</blockquote>
-              <figcaption class="quote__who note"><b style="color:var(--fg)">{q.name}</b>{q.company}</figcaption>
-            </figure>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="section-title wrap"><h2 class="h-xl" data-words>{home.notesTitle}</h2></div>
-    <div class="split split--narrow">
-      <aside class="split__aside">
-        <span></span>
-        <div>
-          <p class="note">{home.notesNote}</p>
-          <div style="margin-top:24px"><TextLink href="/notes" label="Read All" /></div>
-        </div>
-      </aside>
-      <div class="notes__grid">
-        {
-          notes.map((n) => (
-            <a class="card" href={`/notes/${n.slug}`}>
-              <span class="card__img" data-clip data-cursor="arrow"><img src={n.image} alt="" loading="lazy" decoding="async" /></span>
-              <time class="card__date">{n.date}</time>
-              <h3 class="card__title h-sm">{n.title}</h3>
-              <p class="card__text">{n.excerpt}</p>
-            </a>
-          ))
-        }
-      </div>
+    <div class="quotes__body">
+      <blockquote class="quote__text">“{home.quote}”</blockquote>
     </div>
   </section>
 
@@ -263,32 +186,5 @@ const soloCols = (value: string) =>
       </div>
     </aside>
     <TalkForm />
-  </section>
-
-  <section class="split faq">
-    <aside class="split__aside">
-      <div>
-        <h2 class="h-sm" style="font-weight:700">{home.faqTitle}</h2>
-        <p class="note" style="margin-top:12px">{home.faqNote}</p>
-      </div>
-      <TextLink href="/about" label="About me" />
-    </aside>
-    <div class="faq__list">
-      {
-        home.faq.map((f, i) => (
-          <div class:list={['faq__item', { 'is-open': i === 0 }]}>
-            <button class="faq__q" type="button" aria-expanded={i === 0 ? 'true' : 'false'}>
-              <span class="faq__icon" aria-hidden="true" />
-              <span class="h-md pre">{f.q}</span>
-            </button>
-            <div class="faq__a"><p>{f.a}</p></div>
-          </div>
-        ))
-      }
-      <div class="faq__more">
-        <p>{home.faqCta}</p>
-        <div><Pill href="/contact" label="Ask a question" /></div>
-      </div>
-    </div>
   </section>
 </Base>

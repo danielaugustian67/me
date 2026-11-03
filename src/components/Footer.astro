@@ -1,14 +1,11 @@
 ---
 import { site } from '../data/site';
 import Arrow from './Arrow.astro';
-
-const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
   <div class="footer__brand">
     <p class="footer__logo h-xxl" data-fit="0.78" data-slits aria-label={site.brand}>{site.brand}<span class="mark">{site.mark}</span></p>
-    <p class="footer__years">{site.years}</p>
   </div>
   <div class="footer__cols">
     <div class="footer__news">
@@ -30,6 +27,5 @@ const year = new Date().getFullYear();
   </div>
   <div class="footer__base">
     <span>Designed &amp; built by {site.brand}</span>
-    <span>© {year} {site.brand}. All rights reserved.</span>
   </div>
 </footer>

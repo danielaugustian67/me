@@ -28,17 +28,6 @@ const letters = 'ABCDEFGH';
     </div>
   </section>
 
-  <section class="about__gallery">
-    {
-      about.gallery.map((g) => (
-        <figure class="about__card">
-          <div class="frame" data-clip><img src={g.src} alt="" loading="lazy" decoding="async" /></div>
-          <figcaption class="caption note"><b style="color:var(--fg)">{g.name}</b>{g.role}</figcaption>
-        </figure>
-      ))
-    }
-  </section>
-
   <section class="split">
     <aside class="split__aside">
       <h2 class="h-lg" data-words>{about.principlesTitle}</h2>
@@ -57,9 +46,5 @@ const letters = 'ABCDEFGH';
         ))
       }
     </div>
-  </section>
-
-  <section class="about__wide" aria-hidden="true">
-    {about.wideImages.map((src) => <div class="frame" data-clip><img src={src} alt="" loading="lazy" decoding="async" /></div>)}
   </section>
 </Base>

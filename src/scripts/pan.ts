@@ -30,39 +30,15 @@ function layoutWork(root: HTMLElement): Layout {
   return { items, worldW: cols * cellW, worldH: rows * cellH };
 }
 
-/** Evenly spaced columns that loop vertically (notes index). */
-function layoutNotes(root: HTMLElement): Layout {
-  const els = [...root.querySelectorAll<HTMLElement>('.pan__note')];
-  const g = innerWidth < 810 ? 20 : 40;
-  const cols = innerWidth < 810 ? 1 : 3;
-  const w = (innerWidth - g * 2 - g * (cols - 1)) / cols;
-  const heights = els.map((el) => {
-    el.style.width = `${w}px`;
-    return el.offsetHeight + 80;
-  });
-  const rowH = Math.max(...heights);
-  const rows = Math.ceil(els.length / cols);
-  const items = els.map((el, i) => ({
-    el,
-    w,
-    h: rowH,
-    x: g + (i % cols) * (w + g),
-    y: Math.floor(i / cols) * rowH,
-  }));
-  return { items, worldW: 0, worldH: rows * rowH };
-}
-
 export function initPan() {
   const root = document.querySelector<HTMLElement>('[data-pan]');
   if (!root) return;
-  const isNotes = root.dataset.pan === 'notes';
-  const layoutFn = isNotes ? layoutNotes : layoutWork;
-  let layout = layoutFn(root);
+  let layout = layoutWork(root);
 
   let x = 0;
   let y = 0;
-  let tx = isNotes ? 0 : -layout.worldW * 0.08;
-  let ty = isNotes ? 100 : -layout.worldH * 0.04;
+  let tx = -layout.worldW * 0.08;
+  let ty = -layout.worldH * 0.04;
   x = tx;
   y = ty;
 
@@ -89,7 +65,7 @@ export function initPan() {
     'wheel',
     (e) => {
       e.preventDefault();
-      if (!isNotes) tx -= e.deltaX;
+      tx -= e.deltaX;
       ty -= e.deltaY;
     },
     { passive: false },
@@ -114,7 +90,7 @@ export function initPan() {
     moved += Math.abs(dx) + Math.abs(dy);
     if (moved > 4) root.classList.add('is-dragging');
     const speed = e.pointerType === 'touch' ? 1.6 : 1.2;
-    if (!isNotes) tx += dx * speed;
+    tx += dx * speed;
     ty += dy * speed;
   });
   const end = () => {
@@ -148,12 +124,12 @@ export function initPan() {
     const step = 120;
     if (e.key === 'ArrowDown') ty -= step;
     else if (e.key === 'ArrowUp') ty += step;
-    else if (e.key === 'ArrowLeft' && !isNotes) tx += step;
-    else if (e.key === 'ArrowRight' && !isNotes) tx -= step;
+    else if (e.key === 'ArrowLeft') tx += step;
+    else if (e.key === 'ArrowRight') tx -= step;
   });
 
   addEventListener('resize', () => {
-    layout = layoutFn(root);
+    layout = layoutWork(root);
   });
 
   render();

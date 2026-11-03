@@ -1,6 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { projects } from '../../data/site';
+
+// Three projects are too few to fill the wrapping gallery, so they repeat. Repeats are hidden from assistive tech.
+const tiles = Array.from({ length: 12 }, (_, i) => ({
+  project: projects[i % projects.length],
+  landscape: i % 2 === 1,
+  repeat: i >= projects.length,
+}));
 ---
 
 <Base title="Work" footer={false} lenis={false}>
@@ -12,9 +19,9 @@ import { projects } from '../../data/site';
       </div>
     </div>
     {
-      projects.map((p) => (
-        <a class="pan__item" data-cursor="arrow" href={`/work/${p.slug}`} data-landscape={String(p.landscape)} aria-label={p.name}>
-          <img src={p.image} alt="" decoding="async" draggable="false" />
+      tiles.map(({ project: p, landscape, repeat }) => (
+        <a class="pan__item" data-cursor="arrow" href={`/work/${p.slug}`} data-landscape={String(landscape)} aria-label={p.name} aria-hidden={repeat ? 'true' : undefined} tabindex={repeat ? -1 : undefined}>
+          <img src={landscape ? p.wide : p.tall} alt="" decoding="async" draggable="false" />
           <span class="pan__label">{p.name}</span>
         </a>
       ))
