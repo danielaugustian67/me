@@ -90,7 +90,7 @@ const logoShapes = [
   </section>
 
   <section class="numbers__head">
-    <h2 class="h-lg" data-words>{site.brand}{site.mark}<br />In Numbers</h2>
+    <div class="name-box"><h2 class="h-lg name-fit" style={`--chars:${site.brand.length}`} data-words>{site.brand}{site.mark}<br />In Numbers</h2></div>
     <div>
       <p class="note">{home.numbersNote}</p>
       <TextLink href="/contact" label="Let’s work together" />

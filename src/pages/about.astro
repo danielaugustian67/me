@@ -16,8 +16,8 @@ const letters = 'ABCDEFGH';
         <div style="margin-top:24px"><TextLink href="/contact" label="Work With Me" /></div>
       </div>
     </aside>
-    <div class="about__hero">
-      <h1 class="h-xl" data-words>{about.heading[0]}<br />{about.heading[1]}</h1>
+    <div class="about__hero name-box">
+      <h1 class="h-xl name-fit" style={`--chars:${about.heading[1].length}`} data-words>{about.heading[0]}<br />{about.heading[1]}</h1>
       <div class="about__intro">{about.intro.map((p) => <p data-fade>{p}</p>)}</div>
     </div>
   </section>

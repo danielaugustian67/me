@@ -53,7 +53,7 @@ const WIDE = [1920, 1200];
 
 const images = [
   // hero stack
-  ...['sand', 'black', 'yellow', 'orange'].map((palette, i) => [`hero-${i + 1}`, PORTRAIT, palette]),
+  ...['sand', 'black', 'yellow'].map((palette, i) => [`hero-${i + 1}`, PORTRAIT, palette]),
   // reel frames
   ['reel-1', WIDE, 'lilac'],
   ['reel-2', WIDE, 'ink'],
@@ -63,7 +63,6 @@ const images = [
   ['stat-2', WIDE, 'orange'],
   ['stat-3', WIDE, 'blue'],
   // about
-  ['about-1', PORTRAIT, 'ink'],
   ['about-2', PORTRAIT, 'sand'],
   ['full', [2200, 1400], 'steel'],
   // projects

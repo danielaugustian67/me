@@ -4,10 +4,10 @@
 const img = (name: string) => `/img/${name}.webp`;
 
 export const site = {
-  brand: 'YourName',
-  mark: '®',
+  brand: 'danielaugustian',
+  mark: '',
   years: '© 2018-26',
-  title: 'YourName — Portfolio',
+  title: 'danielaugustian — Portfolio',
   description: 'Placeholder portfolio: independent designer and developer building brands and digital experiences.',
   intro:
     '— an independent designer and developer crafting brands and digital products through motion, clarity, and careful detail. Working remotely with teams around the world.',
@@ -37,7 +37,7 @@ export const site = {
 };
 
 export const home = {
-  heroImages: ['hero-1', 'hero-2', 'hero-3', 'hero-4'].map(img),
+  heroImages: ['hero-1', 'hero-2', 'hero-3', 'portrait'].map(img),
   statement: 'I bring ideas and design together, turning rough thinking into clarity and detail into something people remember.',
   approach: [
     'This is a placeholder for how you work. Describe your process in a few honest sentences: how a project starts, who you talk to, and how decisions get made along the way.',
@@ -104,8 +104,8 @@ export const home = {
   aboutText:
     'Placeholder bio. Say who you are, where you come from, and why you do this work. What started as curiosity has grown into a practice built on structure, imagination, and care for every project.',
   aboutImages: [
-    { src: img('about-1'), label: 'Your Name', role: 'Designer' },
-    { src: img('about-2'), label: 'Your Name', role: 'Developer' },
+    { src: img('portrait-about'), label: 'danielaugustian', role: 'Designer' },
+    { src: img('about-2'), label: 'danielaugustian', role: 'Developer' },
   ],
   partnersTitle: 'Selected Clients',
   partnersNote: 'Some of the teams I have had the chance to work with.',
@@ -215,7 +215,7 @@ export const projects = projectNames.map((name, i) => {
       { value: '+78%', label: 'Placeholder metric three' },
       { value: '+16%', label: 'Placeholder metric four' },
     ],
-    credits: 'Your Name (Design & Code), Collaborator Name (Copywriting), Collaborator Name (Photography).',
+    credits: 'danielaugustian (Design & Code), Collaborator Name (Copywriting), Collaborator Name (Photography).',
     liveUrl: 'https://example.com',
   };
 });
@@ -241,7 +241,7 @@ export const notes = noteTitles.map(([title, date], i) => ({
 }));
 
 export const about = {
-  heading: ['Hi, I am', 'Your Name'],
+  heading: ['Hi, I am', 'danielaugustian'],
   intro: [
     'This is a placeholder introduction. Describe your practice in a few sentences: what you make, how you think, and who you enjoy working with. Keep it human and specific.',
     'Use this second paragraph for the bigger picture: what you want the work to do, and how you show up for the people you work with, long after launch.',

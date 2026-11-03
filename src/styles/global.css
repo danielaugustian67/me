@@ -196,6 +196,19 @@ html.theme-switching::view-transition-new(root) {
   line-height: 1;
 }
 
+/* Headings that hold the name: shrink so a long name stays inside its column. */
+.name-box {
+  container-type: inline-size;
+}
+
+.h-xl.name-fit {
+  font-size: min(var(--h-xl), calc(100cqw / (var(--chars) * 0.5)));
+}
+
+.h-lg.name-fit {
+  font-size: min(var(--h-lg), calc(100cqw / (var(--chars) * 0.5)));
+}
+
 .h-lg {
   font-size: var(--h-lg);
   line-height: 1;
@@ -243,6 +256,12 @@ html.theme-switching::view-transition-new(root) {
   vertical-align: top;
   padding-bottom: 0.14em;
   margin-bottom: -0.14em;
+}
+
+/* The hero title's tight line height needs more room for descenders like g. */
+.h-xxl .w {
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
 }
 
 .w__i {
@@ -1416,7 +1435,8 @@ select.field:valid {
 .footer__logo {
   --slit: 26;
   line-height: 0.82;
-  padding-block: 0.05em;
+  padding-block: 0.05em 0.28em;
+  margin-bottom: -0.23em;
   padding-right: 0.06em;
   white-space: nowrap;
   -webkit-mask-image: repeating-linear-gradient(to bottom, #000 0 calc(var(--slit) * 1px), transparent calc(var(--slit) * 1px) 26px);
