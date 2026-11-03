@@ -27,12 +27,17 @@ function initLenis() {
 function fitText() {
   for (const el of $$('[data-fit]')) {
     const box = el.parentElement!;
-    const target = box.clientWidth * Number(el.dataset.fit);
+    const hero = el.classList.contains('hero__title');
+    const fullWidth = hero && isPhone();
+    let target = box.clientWidth * Number(el.dataset.fit);
+    if (fullWidth) target = box.clientWidth - 2 * parseFloat(getComputedStyle(el).marginLeft);
+    // Leaves room for the years beside the title.
+    else if (hero) target = Math.min(innerWidth - (innerWidth < 1200 ? 242 : 263), 1400);
     el.style.fontSize = '100px';
     el.style.display = 'inline-block';
     const size = (100 * target) / el.getBoundingClientRect().width;
     el.style.display = '';
-    el.style.fontSize = `${Math.min(size, innerWidth * 0.1667)}px`;
+    el.style.fontSize = `${Math.min(size, innerWidth * (fullWidth ? 0.3 : 0.1667))}px`;
   }
 }
 
@@ -128,7 +133,7 @@ function initHero() {
   const stack = document.querySelector<HTMLElement>('.hero__stack');
   if (!stack) return;
   const images = $$('.hero__img', stack);
-  const rotations = [-20, 14, -9, 7, -4];
+  const rotations = [-5, -20, -10, 5];
   images.forEach((img, i) => gsap.set(img, { rotate: rotations[i % rotations.length] }));
   if (reduced) {
     gsap.set(images, { autoAlpha: 1 });
@@ -438,6 +443,46 @@ function initClock() {
   }
 }
 
+function initTheme() {
+  const root = document.documentElement;
+  const btn = document.querySelector<HTMLElement>('[data-theme-toggle]');
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  const saved = () => {
+    try {
+      return localStorage.getItem('theme');
+    } catch {
+      return null;
+    }
+  };
+  const sync = () => {
+    const dark = root.dataset.theme === 'dark';
+    btn?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
+    meta?.setAttribute('content', dark ? '#0a0a0a' : '#ffffff');
+  };
+  const apply = (theme: string) => {
+    const change = () => {
+      root.dataset.theme = theme;
+      sync();
+    };
+    if (reduced || !document.startViewTransition) return change();
+    root.classList.add('theme-switching');
+    document.startViewTransition(change).finished.finally(() => root.classList.remove('theme-switching'));
+  };
+  sync();
+  btn?.addEventListener('click', () => {
+    const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {}
+    apply(theme);
+  });
+  // Follows the system until the visitor picks a theme themselves.
+  system.addEventListener('change', (e) => {
+    if (!saved()) apply(e.matches ? 'dark' : 'light');
+  });
+}
+
 function initMenu(lenis: Lenis | null) {
   const btn = document.querySelector<HTMLElement>('[data-menu-toggle]');
   const menu = document.querySelector<HTMLElement>('[data-menu]');
@@ -458,6 +503,7 @@ fitText();
 alignIntro();
 const lenis = initLenis();
 initClock();
+initTheme();
 initMenu(lenis);
 initForms();
 initHero();

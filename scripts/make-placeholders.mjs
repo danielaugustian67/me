@@ -53,7 +53,7 @@ const WIDE = [1920, 1200];
 
 const images = [
   // hero stack
-  ...['black', 'sand', 'yellow', 'steel', 'orange'].map((palette, i) => [`hero-${i + 1}`, PORTRAIT, palette]),
+  ...['sand', 'black', 'yellow', 'orange'].map((palette, i) => [`hero-${i + 1}`, PORTRAIT, palette]),
   // reel frames
   ['reel-1', WIDE, 'lilac'],
   ['reel-2', WIDE, 'ink'],

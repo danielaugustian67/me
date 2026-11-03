@@ -26,8 +26,18 @@ const pageDescription = description ?? site.description;
     <meta property="og:description" content={pageDescription} />
     <meta property="og:image" content="/img/og.webp" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#ffffff" />
     <script is:inline>
       document.documentElement.classList.replace('no-js', 'js');
+      // Runs before the first paint so a saved theme never flashes the other one.
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem('theme');
+        } catch (e) {}
+        var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
     </script>
   </head>
   <body>

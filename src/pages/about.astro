@@ -33,7 +33,7 @@ const letters = 'ABCDEFGH';
       about.gallery.map((g) => (
         <figure class="about__card">
           <div class="frame" data-clip><img src={g.src} alt="" loading="lazy" decoding="async" /></div>
-          <figcaption class="caption note"><b style="color:#000">{g.name}</b>{g.role}</figcaption>
+          <figcaption class="caption note"><b style="color:var(--fg)">{g.name}</b>{g.role}</figcaption>
         </figure>
       ))
     }

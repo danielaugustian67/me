@@ -1,6 +1,8 @@
 :root {
-  --black: #000;
+  --bg: #fff;
+  --fg: #000;
   --ink: #444;
+  --logo: #333;
   --muted: #757575;
   --faint: #999;
   --ghost: #eee;
@@ -13,6 +15,33 @@
   --h-sm: clamp(20px, 1.8vw, 26px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0a0a0a;
+  --fg: #fff;
+  --ink: #bdbdbd;
+  --logo: #d4d4d4;
+  --muted: #8f8f8f;
+  --faint: #6f6f6f;
+  --ghost: #222;
+  --field: #171717;
+  color-scheme: dark;
+}
+
+/* Without JavaScript there is no toggle, so the system setting decides. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0a0a0a;
+    --fg: #fff;
+    --ink: #bdbdbd;
+    --logo: #d4d4d4;
+    --muted: #8f8f8f;
+    --faint: #6f6f6f;
+    --ghost: #222;
+    --field: #171717;
+    color-scheme: dark;
+  }
 }
 
 *,
@@ -38,8 +67,8 @@ html.lenis body {
 body {
   margin: 0;
   overflow-x: clip;
-  background: #fff;
-  color: var(--black);
+  background: var(--bg);
+  color: var(--fg);
   font-family: 'Inter Variable', system-ui, sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
@@ -111,6 +140,20 @@ ol {
 
 @view-transition {
   navigation: auto;
+}
+
+html.theme-switching::view-transition-old(root) {
+  animation: none;
+}
+
+html.theme-switching::view-transition-new(root) {
+  animation: 0.4s ease both theme-in;
+}
+
+@keyframes theme-in {
+  from {
+    opacity: 0;
+  }
 }
 
 ::view-transition-old(root) {
@@ -241,8 +284,8 @@ button:hover > .roll .roll__c {
   height: 48px;
   padding: 0 20px;
   border-radius: 999px;
-  background: var(--black);
-  color: #fff;
+  background: var(--fg);
+  color: var(--bg);
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
@@ -285,6 +328,7 @@ button:hover .arrow {
   inset: 0;
   z-index: 50;
   pointer-events: none;
+  /* Stays white in both themes: difference is what inverts it against the page. */
   color: #fff;
   mix-blend-mode: difference;
 }
@@ -311,10 +355,16 @@ button:hover .arrow {
   vertical-align: 0.34em;
 }
 
-.chrome__nav {
+.chrome__actions {
   position: absolute;
   right: var(--g);
   top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 72px;
+}
+
+.chrome__nav {
   display: flex;
   gap: 72px;
   font-size: 14px;
@@ -323,10 +373,28 @@ button:hover .arrow {
   text-transform: uppercase;
 }
 
+.chrome__theme {
+  display: block;
+  padding: 13px;
+  margin: -13px;
+}
+
+.chrome__theme svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.5s var(--ease);
+}
+
+[data-theme='dark'] .chrome__theme svg {
+  transform: rotate(180deg);
+}
+
+.no-js .chrome__theme {
+  display: none;
+}
+
 .chrome__menu {
-  position: absolute;
-  right: var(--g);
-  top: 32px;
   display: none;
   font-size: 14px;
   line-height: 32px;
@@ -358,7 +426,7 @@ button:hover .arrow {
   justify-content: flex-end;
   gap: 40px;
   padding: 100px var(--g) 64px;
-  background: #fff;
+  background: var(--bg);
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.35s ease, visibility 0.35s;
@@ -456,7 +524,7 @@ button:hover .arrow {
   left: var(--g);
   top: 32px;
   z-index: 3;
-  width: min(24.5vw, 360px);
+  width: min(calc(25vw - 50px), 360px);
   font-size: 20px;
   line-height: 32px;
   text-indent: 88px;
@@ -466,8 +534,9 @@ button:hover .arrow {
   position: absolute;
   z-index: 2;
   left: 50%;
-  top: 46%;
-  width: min(33vw, 54vh);
+  top: 50%;
+  height: 66.67vh;
+  height: 66.67svh;
   aspect-ratio: 3 / 4;
   transform: translate(-50%, -50%);
 }
@@ -485,11 +554,17 @@ button:hover .arrow {
   visibility: hidden;
 }
 
+/* Keeps dark photos from melting into the dark page. */
+[data-theme='dark'] .hero__img {
+  outline: 1px solid rgb(255 255 255 / 0.14);
+  outline-offset: -1px;
+}
+
 .hero__title {
   position: absolute;
   z-index: 1;
   left: var(--g);
-  bottom: 96px;
+  bottom: 36px;
   white-space: nowrap;
 }
 
@@ -836,7 +911,7 @@ button:hover .arrow {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  color: #333;
+  color: var(--logo);
   font-size: clamp(18px, 2.2vw, 32px);
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -923,8 +998,8 @@ button:hover .arrow {
   display: flex;
   align-items: center;
   padding-inline: 16px;
-  background: var(--black);
-  color: #fff;
+  background: var(--fg);
+  color: var(--bg);
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
@@ -983,8 +1058,8 @@ button:hover .arrow {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--black);
-  color: #fff;
+  background: var(--fg);
+  color: var(--bg);
   transition: transform 0.4s var(--ease);
 }
 
@@ -1053,8 +1128,8 @@ button:hover .arrow {
 }
 
 .toggle button[aria-pressed='true'] {
-  background: var(--black);
-  color: #fff;
+  background: var(--fg);
+  color: var(--bg);
 }
 
 .plan {
@@ -1227,7 +1302,7 @@ select.field {
 }
 
 select.field:valid {
-  color: var(--black);
+  color: var(--fg);
 }
 
 .talk__legal {
@@ -1236,7 +1311,7 @@ select.field:valid {
 }
 
 .talk__legal a {
-  color: var(--black);
+  color: var(--fg);
   text-decoration: underline;
 }
 
@@ -1342,6 +1417,7 @@ select.field:valid {
   --slit: 26;
   line-height: 0.82;
   padding-block: 0.05em;
+  padding-right: 0.06em;
   white-space: nowrap;
   -webkit-mask-image: repeating-linear-gradient(to bottom, #000 0 calc(var(--slit) * 1px), transparent calc(var(--slit) * 1px) 26px);
   mask-image: repeating-linear-gradient(to bottom, #000 0 calc(var(--slit) * 1px), transparent calc(var(--slit) * 1px) 26px);
@@ -1489,7 +1565,7 @@ select.field:valid {
   bottom: 12px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--bg);
   font-size: 12px;
   font-weight: 700;
   opacity: 0;
@@ -1705,7 +1781,7 @@ select.field:valid {
   font-size: clamp(18px, 1.6vw, 22px);
   line-height: 1.45;
   letter-spacing: -0.01em;
-  color: var(--black);
+  color: var(--fg);
 }
 
 .about__gallery {
@@ -1800,14 +1876,38 @@ select.field:valid {
     display: block;
   }
 
+  .chrome__actions {
+    gap: 32px;
+  }
+
+  :root {
+    --g: 30px;
+  }
+
   .split--narrow {
     --left: 22vw;
   }
 
   .hero__intro {
-    width: 22vw;
-    font-size: 16px;
-    line-height: 26px;
+    top: 27px;
+    width: 360px;
+  }
+
+  .hero__stack {
+    top: 47.7%;
+    height: 48.75vh;
+    height: 48.75svh;
+  }
+
+  .hero__title {
+    bottom: 10vh;
+    bottom: 10svh;
+  }
+
+  .hero__years {
+    bottom: 24.5vh;
+    bottom: 24.5svh;
+    font-size: 30px;
   }
 }
 
@@ -1822,9 +1922,12 @@ select.field:valid {
   }
 
   .chrome__logo,
-  .chrome__menu,
-  .chrome__nav {
+  .chrome__actions {
     top: 20px;
+  }
+
+  .chrome__actions {
+    gap: 24px;
   }
 
   .chrome__clock {
@@ -1833,15 +1936,10 @@ select.field:valid {
 
   .hero__intro {
     position: relative;
-    top: 20px;
-    left: 0;
-    width: auto;
-    padding-inline: var(--g);
-    font-size: 19px;
-    line-height: 1.55;
-    max-width: 320px;
-    box-sizing: content-box;
-    text-indent: 84px;
+    top: auto;
+    left: auto;
+    width: min(calc((100vw - 2 * var(--g)) * 0.6667), 360px);
+    margin: 22px var(--g) 0;
   }
 
   .hero {
@@ -1854,8 +1952,9 @@ select.field:valid {
     position: relative;
     left: auto;
     top: auto;
-    width: 74vw;
-    margin: 60px auto 40px;
+    height: auto;
+    width: calc((100vw - 2 * var(--g)) * 0.8856);
+    margin: calc(18px + 13.1vw) auto;
     transform: none;
   }
 
@@ -1863,8 +1962,7 @@ select.field:valid {
     position: relative;
     left: auto;
     bottom: auto;
-    padding-inline: var(--g);
-    margin-top: 24px;
+    margin-inline: var(--g);
   }
 
   .hero__years {

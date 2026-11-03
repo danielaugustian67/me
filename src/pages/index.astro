@@ -169,7 +169,7 @@ const logoShapes = [
           home.aboutImages.map((a) => (
             <figure>
               <div class="aboutme__img" data-clip><img src={a.src} alt="" loading="lazy" decoding="async" /></div>
-              <figcaption class="caption note"><b style="color:#000">{a.label}</b>{a.role}</figcaption>
+              <figcaption class="caption note"><b style="color:var(--fg)">{a.label}</b>{a.role}</figcaption>
             </figure>
           ))
         }
@@ -245,7 +245,7 @@ const logoShapes = [
           home.quotes.map((q, i) => (
             <figure class:list={['quote', { 'is-active': i === 0 }]}>
               <blockquote class="quote__text">“{q.text}”</blockquote>
-              <figcaption class="quote__who note"><b style="color:#000">{q.name}</b>{q.company}</figcaption>
+              <figcaption class="quote__who note"><b style="color:var(--fg)">{q.name}</b>{q.company}</figcaption>
             </figure>
           ))
         }

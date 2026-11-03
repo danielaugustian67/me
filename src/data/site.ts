@@ -37,7 +37,7 @@ export const site = {
 };
 
 export const home = {
-  heroImages: ['hero-1', 'hero-2', 'hero-3', 'hero-4', 'hero-5'].map(img),
+  heroImages: ['hero-1', 'hero-2', 'hero-3', 'hero-4'].map(img),
   statement: 'I bring ideas and design together, turning rough thinking into clarity and detail into something people remember.',
   approach: [
     'This is a placeholder for how you work. Describe your process in a few honest sentences: how a project starts, who you talk to, and how decisions get made along the way.',
