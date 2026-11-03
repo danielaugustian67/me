@@ -1,0 +1,359 @@
+---
+import Arrow from '../components/Arrow.astro';
+import Pill from '../components/Pill.astro';
+import TalkForm from '../components/TalkForm.astro';
+import TextLink from '../components/TextLink.astro';
+import Base from '../layouts/Base.astro';
+import { home, notes, site } from '../data/site';
+
+const letters = 'ABCDEFGH';
+
+// Each digit column rolls through filler digits, stopping on one stat at a time.
+const FILLER = 3;
+const places = home.stats[0].value.length;
+const digitCols = Array.from({ length: places }, (_, place) => {
+  const cells: { d: string; image: string }[] = [];
+  home.stats.forEach((stat) => {
+    for (let f = 0; f < FILLER; f++) {
+      cells.push({ d: String((Number(stat.value[place]) + 7 + f * 3) % 10), image: stat.image });
+    }
+    cells.push({ d: stat.value[place], image: stat.image });
+  });
+  return cells;
+});
+
+// On phones each stat sits above its own text and rolls on its own.
+const soloCols = (value: string) =>
+  [...value].map((d) => [...Array.from({ length: FILLER }, (_, f) => String((Number(d) + 7 + f * 3) % 10)), d]);
+
+const logoShapes = [
+  '<circle cx="12" cy="12" r="10"/>',
+  '<path d="M12 2 22 22H2Z"/>',
+  '<rect x="3" y="3" width="18" height="18" rx="4"/>',
+  '<path d="M2 12a10 10 0 0 1 20 0Z"/>',
+  '<path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/>',
+  '<path d="M3 3h8v8H3zM13 13h8v8h-8z"/>',
+];
+---
+
+<Base>
+  <section class="hero">
+    <p class="hero__intro">{site.intro}</p>
+    <div class="hero__stack" aria-hidden="true">
+      {home.heroImages.map((src) => <img class="hero__img" src={src} alt="" decoding="async" />)}
+    </div>
+    <h1 class="hero__title h-xxl" data-fit="0.8"><span class="hero__word">{site.brand}<span class="mark">{site.mark}</span></span></h1>
+    <p class="hero__years">{site.years}</p>
+  </section>
+
+  <section class="scatter" data-scatter>
+    <div class="scatter__stage">
+      <h2 class="scatter__text">{home.statement}</h2>
+    </div>
+  </section>
+
+  <section class="approach">
+    {home.approach.map((p) => <p class="body" data-fade>{p}</p>)}
+  </section>
+
+  <section class="reel" aria-label="Showreel">
+    <div class="reel__sticky" aria-hidden="true">
+      <div class="marquee" data-marquee="1"><span>{home.reelText}</span></div>
+      <div class="marquee marquee--ghost" data-marquee="-1"><span>{home.reelText}</span></div>
+    </div>
+    <div class="reel__frames">
+      {home.reel.map((src) => <figure class="reel__frame" data-parallax><img src={src} alt="" loading="lazy" decoding="async" /></figure>)}
+    </div>
+  </section>
+
+  <section class="split">
+    <aside class="split__aside">
+      <h2 class="h-sm">{home.servicesTitle}</h2>
+      <div>
+        <p class="note">{home.servicesNote}</p>
+        <div style="margin-top:24px"><TextLink href="/contact" label="Get Started" /></div>
+      </div>
+    </aside>
+    <div>
+      {
+        home.services.map((service, i) => (
+          <article class="services__item">
+            <p class="services__letter ghost">{letters[i]} /</p>
+            <div>
+              <h3 class="h-md" data-words>{service.text}</h3>
+              <ul class="services__tags" data-stagger>{service.tags.map((t) => <li class="tag">{t}</li>)}</ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="numbers__head">
+    <h2 class="h-lg" data-words>{site.brand}{site.mark}<br />In Numbers</h2>
+    <div>
+      <p class="note">{home.numbersNote}</p>
+      <TextLink href="/contact" label="Let’s work together" />
+    </div>
+  </section>
+
+  <section class="numbers" data-numbers>
+    <div class="numbers__stage" aria-hidden="true">
+      <div class="digits">
+        {
+          digitCols.map((cells) => (
+            <div class="digits__col" data-count={cells.length}>
+              <span class="digits__roll">
+                {cells.map((c) => <span class="digits__n" style={`background-image:url(${c.image})`}>{c.d}</span>)}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div class="numbers__panels">
+      {
+        home.stats.map((stat) => (
+          <article class="numbers__panel">
+            <div class="digits digits--solo" aria-hidden="true">
+              {
+                soloCols(stat.value).map((cells) => (
+                  <div class="digits__col" data-count={cells.length}>
+                    <span class="digits__roll">
+                      {cells.map((d) => <span class="digits__n" style={`background-image:url(${stat.image})`}>{d}</span>)}
+                    </span>
+                  </div>
+                ))
+              }
+            </div>
+            <h3 class="h-md pre">{`${stat.value} ${stat.title}`}</h3>
+            <p class="body">{stat.text}</p>
+            <Pill href={stat.cta.href} label={stat.cta.label} />
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="split">
+    <aside class="split__aside">
+      <h2 class="h-lg" data-words>Selected<br />Awards</h2>
+      <div>
+        <p class="note">{home.recognitionNote}</p>
+        <div style="margin-top:24px"><TextLink href="/work" label="See the Work" /></div>
+      </div>
+    </aside>
+    <ul class="rec__list" data-stagger>
+      {
+        home.recognition.map((r) => (
+          <li class="rec__row">
+            <b>{r.name}</b>
+            <span>{r.detail}</span>
+            <em>{r.count}</em>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="split split--mid">
+    <aside class="split__aside">
+      <span></span>
+      <div><Pill href="/about" label="More About Me" /></div>
+    </aside>
+    <div class="aboutme__body">
+      <h2 class="h-lg" data-words>{home.aboutTitle}</h2>
+      <p class="body aboutme__text" data-fade>{home.aboutText}</p>
+      <div class="aboutme__images">
+        {
+          home.aboutImages.map((a) => (
+            <figure>
+              <div class="aboutme__img" data-clip><img src={a.src} alt="" loading="lazy" decoding="async" /></div>
+              <figcaption class="caption note"><b style="color:#000">{a.label}</b>{a.role}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="partners">
+    <div class="partners__sticky">
+      <h2 class="partners__title h-xl">{home.partnersTitle}</h2>
+    </div>
+    <div class="partners__grid" data-stagger>
+      {
+        home.partners.map((name, i) => (
+          <div class="partners__logo">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" set:html={logoShapes[i % logoShapes.length]} />
+            <span>{name}</span>
+          </div>
+        ))
+      }
+    </div>
+    <p class="partners__note note">{home.partnersNote}</p>
+  </section>
+
+  <section class="fullimg" aria-hidden="true">
+    <div class="fullimg__frame"><img src={home.fullImage} alt="" loading="lazy" decoding="async" /></div>
+  </section>
+
+  <section class="process">
+    <div class="process__head">
+      <h2 class="h-lg" data-words>{home.processTitle}</h2>
+      <p class="note" data-fade>{home.processNote}</p>
+    </div>
+    <div class="gantt" style={`--weeks:${home.processWeeks}`} aria-hidden="true">
+      <div class="gantt__lines">
+        {Array.from({ length: home.processWeeks }, (_, i) => <div><span>{String(i + 1).padStart(2, '0')}</span></div>)}
+      </div>
+      {
+        home.process.map((p) => (
+          <div class="gantt__row">
+            <div class="gantt__bar" style={`--from:${p.from};--to:${p.to}`}>{p.title}</div>
+          </div>
+        ))
+      }
+    </div>
+    <ol class="process__steps" data-stagger>
+      {
+        home.process.map((p, i) => (
+          <li>
+            <b>{String(i + 1).padStart(2, '0')}</b>
+            <h3 class="h-sm" style="font-weight:700">{p.title}</h3>
+            <p>{p.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section>
+    <div class="section-title wrap">
+      <h2 class="h-xl" data-words>{home.quotesTitle}</h2>
+    </div>
+    <div class="quotes__body" data-quotes>
+      <div class="quotes__index">
+        <div class="quotes__nav">
+          <button type="button" data-prev aria-label="Previous testimonial"><Arrow /></button>
+          <button type="button" data-next aria-label="Next testimonial"><Arrow /></button>
+        </div>
+        <p class="quotes__n ghost" aria-live="polite">/1</p>
+      </div>
+      <div class="quotes__stage">
+        {
+          home.quotes.map((q, i) => (
+            <figure class:list={['quote', { 'is-active': i === 0 }]}>
+              <blockquote class="quote__text">“{q.text}”</blockquote>
+              <figcaption class="quote__who note"><b style="color:#000">{q.name}</b>{q.company}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="split" data-pricing>
+    <aside class="split__aside">
+      <div class="pricing__top">
+        <h2 class="h-lg" data-words>Pricing</h2>
+        <div class="toggle" role="group" aria-label="Billing period">
+          <button type="button" data-period="monthly" aria-pressed="false">Monthly</button>
+          <button type="button" data-period="yearly" aria-pressed="true">Yearly {home.yearlyDiscount}</button>
+        </div>
+      </div>
+      <p class="note">{home.pricingNote}</p>
+    </aside>
+    <div>
+      {
+        home.plans.map((plan) => (
+          <article class="plan">
+            <h3 class="h-md" data-words>{plan.name}</h3>
+            <p class="plan__text">{plan.text}</p>
+            <ul class="plan__features" data-stagger>
+              {plan.features.map((f) => (
+                <li>
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                    <circle cx="10" cy="10" r="8.5" />
+                    <path d="M6.5 10.2l2.4 2.4 4.6-5" />
+                  </svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <p class="plan__from">STARTING FROM</p>
+            <p class="plan__price">
+              <span>
+                <span class="plan__amount" data-monthly={plan.monthly} data-yearly={plan.yearly}>${plan.yearly.toLocaleString('en-US')}</span><span class="plan__unit">/month</span>
+              </span>
+              <span class="plan__old">${plan.monthly.toLocaleString('en-US')}</span>
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title wrap"><h2 class="h-xl" data-words>{home.notesTitle}</h2></div>
+    <div class="split split--narrow">
+      <aside class="split__aside">
+        <span></span>
+        <div>
+          <p class="note">{home.notesNote}</p>
+          <div style="margin-top:24px"><TextLink href="/notes" label="Read All" /></div>
+        </div>
+      </aside>
+      <div class="notes__grid">
+        {
+          notes.map((n) => (
+            <a class="card" href={`/notes/${n.slug}`}>
+              <span class="card__img" data-clip><img src={n.image} alt="" loading="lazy" decoding="async" /></span>
+              <time class="card__date">{n.date}</time>
+              <h3 class="card__title h-sm">{n.title}</h3>
+              <p class="card__text">{n.excerpt}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="split split--narrow">
+    <aside class="split__aside">
+      <span></span>
+      <div>
+        <p class="note">{home.contactNote}</p>
+        <div style="margin-top:24px"><TextLink href="/about" label="About Me" /></div>
+      </div>
+    </aside>
+    <TalkForm />
+  </section>
+
+  <section class="split faq">
+    <aside class="split__aside">
+      <div>
+        <h2 class="h-sm" style="font-weight:700">{home.faqTitle}</h2>
+        <p class="note" style="margin-top:12px">{home.faqNote}</p>
+      </div>
+      <TextLink href="/about" label="About me" />
+    </aside>
+    <div class="faq__list">
+      {
+        home.faq.map((f, i) => (
+          <div class:list={['faq__item', { 'is-open': i === 0 }]}>
+            <button class="faq__q" type="button" aria-expanded={i === 0 ? 'true' : 'false'}>
+              <span class="faq__icon" aria-hidden="true" />
+              <span class="h-md pre">{f.q}</span>
+            </button>
+            <div class="faq__a"><p>{f.a}</p></div>
+          </div>
+        ))
+      }
+      <div class="faq__more">
+        <p>{home.faqCta}</p>
+        <div><Pill href="/contact" label="Ask a question" /></div>
+      </div>
+    </div>
+  </section>
+</Base>

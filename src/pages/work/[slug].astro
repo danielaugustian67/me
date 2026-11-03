@@ -1,0 +1,65 @@
+---
+import Pill from '../../components/Pill.astro';
+import Base from '../../layouts/Base.astro';
+import { projects } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+const { project, next } = Astro.props;
+---
+
+<Base title={project.name} description={project.summary}>
+  <p class="project__year" aria-hidden="true">{project.year}</p>
+  <section class="project__hero">
+    <div class="project__cover" data-clip><img src={project.image} alt="" decoding="async" /></div>
+    <div class="project__info">
+      <h1 class="h-lg" data-words>{project.name}</h1>
+      <p class="body" data-fade>{project.summary}</p>
+      <p class="note project__scope" data-fade>{project.scope}</p>
+    </div>
+  </section>
+
+  <section class="project__block">
+    <p class="body" data-fade>{project.challenge}</p>
+    <p class="h-md ghost">/ 1</p>
+  </section>
+
+  <p class="project__statement" data-words>{project.statement}</p>
+
+  <section class="project__block">
+    <div class="body" data-fade>{project.approach.map((p) => <p>{p}</p>)}</div>
+    <p class="h-md ghost">/ 2</p>
+  </section>
+
+  <section class="project__gallery">
+    {project.gallery.map((src) => <div class="frame" data-clip><img src={src} alt="" loading="lazy" decoding="async" /></div>)}
+  </section>
+
+  <section class="results" data-stagger>
+    {
+      project.results.map((r) => (
+        <div>
+          <strong>{r.value}</strong>
+          <span>{r.label}</span>
+        </div>
+      ))
+    }
+  </section>
+
+  <section class="project__credits">
+    <p data-fade>{project.credits}</p>
+    <div data-fade><Pill href={project.liveUrl} label="Live Project" external /></div>
+  </section>
+
+  <a class="next" href={`/work/${next.slug}`} aria-label={`Next project: ${next.name}`}>
+    <div class="next__marquee" aria-hidden="true">
+      <div class="marquee" data-marquee="1"><span>Next Project</span></div>
+    </div>
+    <div class="next__frame"><img src={next.image} alt="" loading="lazy" decoding="async" /></div>
+  </a>
+</Base>

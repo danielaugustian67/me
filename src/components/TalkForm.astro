@@ -1,0 +1,45 @@
+---
+import { contactForm, site } from '../data/site';
+import Pill from './Pill.astro';
+
+const { heading = 'h2' } = Astro.props as { heading?: 'h1' | 'h2' };
+const Heading = heading;
+---
+
+<div class="talk">
+  <Heading class="h-xl" data-words>Let’s Talk!</Heading>
+  <form class="talk__form" data-talk data-endpoint={site.formEndpoint} data-email={site.email}>
+    <div class="talk__line" data-fade>
+      <span>Hey {site.brand}{site.mark}, my name is</span>
+      <input class="field" name="name" required placeholder="Your Name *" aria-label="Your name" autocomplete="name" />
+      <span>and I’m writing from</span>
+      <input class="field" name="company" placeholder="Company Name" aria-label="Company name" autocomplete="organization" />
+      <span>.</span>
+    </div>
+    <div class="talk__line" data-fade>
+      <span>I’m getting in touch because I’d like to</span>
+      <textarea class="field field--area" name="message" required placeholder="Message *" aria-label="Message"></textarea>
+    </div>
+    <div class="talk__line" data-fade>
+      <span>My budget is roughly</span>
+      <select class="field" name="budget" required aria-label="Budget">
+        <option value="" disabled selected>Select a Budget *</option>
+        {contactForm.budgets.map((b) => <option>{b}</option>)}
+      </select>
+      <span>and I’d like to start</span>
+      <select class="field" name="timeframe" required aria-label="Timeframe">
+        <option value="" disabled selected>Choose a Timeframe *</option>
+        {contactForm.timeframes.map((t) => <option>{t}</option>)}
+      </select>
+      <span>.</span>
+    </div>
+    <div class="talk__line" data-fade>
+      <span>You can contact me at</span>
+      <input class="field" name="email" type="email" required placeholder="Email *" aria-label="Email" autocomplete="email" />
+      <span>. Looking forward to your reply!</span>
+    </div>
+    <p class="talk__legal" data-fade>By submitting, you agree to the <a href="/legal/terms">Terms</a> and <a href="/legal/privacy">Privacy Policy</a>.</p>
+    <div data-fade><Pill label="Get in Touch" type="submit" /></div>
+    <p class="talk__status" role="status" data-talk-status></p>
+  </form>
+</div>

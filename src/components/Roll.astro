@@ -1,0 +1,14 @@
+---
+const { text } = Astro.props as { text: string };
+const chars = [...text];
+---
+
+<span class="roll" aria-label={text} role="text">
+  {
+    chars.map((c, i) => (
+      <span class="roll__c" style={`--i:${i}`} data-c={c === ' ' ? ' ' : c} aria-hidden="true">
+        {c === ' ' ? ' ' : c}
+      </span>
+    ))
+  }
+</span>

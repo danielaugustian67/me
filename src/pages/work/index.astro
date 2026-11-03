@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import { projects } from '../../data/site';
+---
+
+<Base title="Work" footer={false} lenis={false}>
+  <div class="pan" data-pan="work">
+    <div class="pan__title">
+      <div>
+        <h1 class="h-xl" style="font-size:clamp(90px,16.67vw,240px)">Work</h1>
+        <p class="pan__hint">scroll / drag</p>
+      </div>
+    </div>
+    {
+      projects.map((p) => (
+        <a class="pan__item" href={`/work/${p.slug}`} data-landscape={String(p.landscape)} aria-label={p.name}>
+          <img src={p.image} alt="" decoding="async" draggable="false" />
+          <span class="pan__label">{p.name}</span>
+        </a>
+      ))
+    }
+  </div>
+</Base>

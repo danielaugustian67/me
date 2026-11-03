@@ -1,0 +1,65 @@
+---
+import Pill from '../components/Pill.astro';
+import TextLink from '../components/TextLink.astro';
+import Base from '../layouts/Base.astro';
+import { about, home } from '../data/site';
+
+const letters = 'ABCDEFGH';
+---
+
+<Base title="About">
+  <section class="split split--narrow">
+    <aside class="split__aside">
+      <span></span>
+      <div>
+        <p class="note">{home.contactNote}</p>
+        <div style="margin-top:24px"><TextLink href="/contact" label="Work With Me" /></div>
+      </div>
+    </aside>
+    <div class="about__hero">
+      <h1 class="h-xl" data-words>{about.heading[0]}<br />{about.heading[1]}</h1>
+      <div class="about__intro">{about.intro.map((p) => <p data-fade>{p}</p>)}</div>
+    </div>
+  </section>
+
+  <section class="scatter" data-scatter>
+    <div class="scatter__stage">
+      <h2 class="scatter__text">{about.statement}</h2>
+    </div>
+  </section>
+
+  <section class="about__gallery">
+    {
+      about.gallery.map((g) => (
+        <figure class="about__card">
+          <div class="frame" data-clip><img src={g.src} alt="" loading="lazy" decoding="async" /></div>
+          <figcaption class="caption note"><b style="color:#000">{g.name}</b>{g.role}</figcaption>
+        </figure>
+      ))
+    }
+  </section>
+
+  <section class="split">
+    <aside class="split__aside">
+      <h2 class="h-lg" data-words>{about.principlesTitle}</h2>
+      <div>
+        <p class="note">{about.principlesNote}</p>
+        <div style="margin-top:24px"><Pill href="/contact" label="Work With Me" /></div>
+      </div>
+    </aside>
+    <div>
+      {
+        about.principles.map((p, i) => (
+          <article class="about__principle">
+            <p class="services__letter ghost">{letters[i]} /</p>
+            <p class="h-md" data-words>{p}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="about__wide" aria-hidden="true">
+    {about.wideImages.map((src) => <div class="frame" data-clip><img src={src} alt="" loading="lazy" decoding="async" /></div>)}
+  </section>
+</Base>

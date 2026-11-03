@@ -1,0 +1,25 @@
+---
+import Arrow from './Arrow.astro';
+import Roll from './Roll.astro';
+
+const { href, label, type, external } = Astro.props as {
+  href?: string;
+  label: string;
+  type?: 'submit' | 'button';
+  external?: boolean;
+};
+---
+
+{
+  href ? (
+    <a class="pill" href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+      <Roll text={label} />
+      <Arrow />
+    </a>
+  ) : (
+    <button class="pill" type={type ?? 'button'}>
+      <Roll text={label} />
+      <Arrow />
+    </button>
+  )
+}

@@ -1,0 +1,35 @@
+---
+import { site } from '../data/site';
+import Arrow from './Arrow.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__brand">
+    <p class="footer__logo h-xxl" data-fit="0.78" data-slits aria-label={site.brand}>{site.brand}<span class="mark">{site.mark}</span></p>
+    <p class="footer__years">{site.years}</p>
+  </div>
+  <div class="footer__cols">
+    <div class="footer__news">
+      <p class="note">{site.newsletterNote}</p>
+      <form class="footer__form" data-newsletter data-email={site.email}>
+        <label class="sr-only" for="news-email">Email address</label>
+        <input id="news-email" name="email" type="email" required placeholder="YOUR EMAIL HERE" autocomplete="email" />
+        <button type="submit" aria-label="Subscribe"><Arrow /></button>
+      </form>
+    </div>
+    <div class="footer__list">
+      <h3>Social</h3>
+      {site.socials.map((s) => <a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>)}
+    </div>
+    <div class="footer__list">
+      <h3>Legal</h3>
+      {site.legal.map((l) => <a href={l.href}>{l.label}</a>)}
+    </div>
+  </div>
+  <div class="footer__base">
+    <span>Designed &amp; built by {site.brand}</span>
+    <span>© {year} {site.brand}. All rights reserved.</span>
+  </div>
+</footer>

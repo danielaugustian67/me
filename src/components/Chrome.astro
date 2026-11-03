@@ -1,0 +1,22 @@
+---
+import { site } from '../data/site';
+import Roll from './Roll.astro';
+---
+
+<div class="chrome">
+  <a class="chrome__logo" href="/" aria-label={`${site.brand} home`}>{site.brand}<sup>{site.mark}</sup></a>
+  <nav class="chrome__nav" aria-label="Main">
+    {site.nav.map((item) => <a href={item.href}><Roll text={item.label} /></a>)}
+  </nav>
+  <button class="chrome__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle>Menu</button>
+  <div class="chrome__clock" aria-hidden="true"><span>{site.city}</span><b data-clock data-tz={site.timeZone}></b></div>
+</div>
+
+<div class="menu" id="menu" data-menu inert>
+  <nav class="menu__links" aria-label="Mobile">
+    {site.nav.map((item, i) => <a href={item.href} style={`--i:${i}`}>{item.label}</a>)}
+  </nav>
+  <div class="menu__social">
+    {site.socials.map((s) => <a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>)}
+  </div>
+</div>

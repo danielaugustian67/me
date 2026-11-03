@@ -1,0 +1,26 @@
+---
+import TextLink from '../../components/TextLink.astro';
+import Base from '../../layouts/Base.astro';
+import { notes } from '../../data/site';
+
+export function getStaticPaths() {
+  return notes.map((note) => ({ params: { slug: note.slug }, props: { note } }));
+}
+
+const { note } = Astro.props;
+---
+
+<Base title={note.title} description={note.excerpt}>
+  <article class="article">
+    <header class="article__head">
+      <time class="note">{note.date}</time>
+      <h1 class="h-xl" data-words>{note.title}</h1>
+      <p class="article__lead" data-fade>{note.excerpt}</p>
+    </header>
+    <div class="article__cover frame" data-clip><img src={note.image} alt="" decoding="async" /></div>
+    <div class="article__body">
+      {note.body.map((p) => <p data-fade>{p}</p>)}
+      <div data-fade><TextLink href="/notes" label="All Notes" /></div>
+    </div>
+  </article>
+</Base>

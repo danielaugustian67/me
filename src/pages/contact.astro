@@ -1,0 +1,35 @@
+---
+import TalkForm from '../components/TalkForm.astro';
+import TextLink from '../components/TextLink.astro';
+import Base from '../layouts/Base.astro';
+import { home, site } from '../data/site';
+---
+
+<Base title="Contact">
+  <section class="split split--narrow">
+    <aside class="split__aside">
+      <span></span>
+      <div>
+        <p class="note">{home.contactNote}</p>
+        <div style="margin-top:24px"><TextLink href="/about" label="About Me" /></div>
+      </div>
+    </aside>
+    <div>
+      <TalkForm heading="h1" />
+      <dl class="results" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));padding-inline:0">
+        <div>
+          <dt class="note">EMAIL</dt>
+          <dd class="h-sm"><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+        </div>
+        <div>
+          <dt class="note">PHONE</dt>
+          <dd class="h-sm"><a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></dd>
+        </div>
+        <div>
+          <dt class="note">ADDRESS</dt>
+          <dd class="h-sm">{site.address.map((line) => <div>{line}</div>)}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</Base>

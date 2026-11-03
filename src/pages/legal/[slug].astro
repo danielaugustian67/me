@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return [
+    { params: { slug: 'privacy' }, props: { title: 'Privacy Policy' } },
+    { params: { slug: 'terms' }, props: { title: 'Terms of Service' } },
+  ];
+}
+
+const { title } = Astro.props;
+---
+
+<Base title={title}>
+  <article class="article">
+    <header class="article__head">
+      <h1 class="h-xl" data-words>{title}</h1>
+    </header>
+    <div class="article__body" style="margin-top:80px">
+      <p data-fade>Placeholder text. Replace this page with your own {title.toLowerCase()} before publishing the site.</p>
+      <p data-fade>Questions? Reach out at <a href={`mailto:${site.email}`} style="text-decoration:underline">{site.email}</a>.</p>
+    </div>
+  </article>
+</Base>

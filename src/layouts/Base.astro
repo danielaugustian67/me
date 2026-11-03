@@ -1,0 +1,43 @@
+---
+import '@fontsource-variable/inter/opsz.css';
+import '../styles/global.css';
+import Chrome from '../components/Chrome.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+const { title, description, footer = true, lenis = true } = Astro.props as {
+  title?: string;
+  description?: string;
+  footer?: boolean;
+  lenis?: boolean;
+};
+const pageTitle = title ? `${title} — ${site.brand}` : site.title;
+const pageDescription = description ?? site.description;
+---
+
+<!doctype html>
+<html lang="en" class="no-js" data-lenis={lenis ? 'on' : 'off'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content="/img/og.webp" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+  </head>
+  <body>
+    <Chrome />
+    <main>
+      <slot />
+    </main>
+    {footer && <Footer />}
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

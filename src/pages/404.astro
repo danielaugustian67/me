@@ -1,0 +1,12 @@
+---
+import Pill from '../components/Pill.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found" footer={false}>
+  <section class="notfound">
+    <h1 class="h-xxl" style="line-height:1">404</h1>
+    <p class="body">This page does not exist.</p>
+    <Pill href="/" label="Back Home" />
+  </section>
+</Base>

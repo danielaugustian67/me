@@ -1,0 +1,11 @@
+---
+import Arrow from './Arrow.astro';
+import Roll from './Roll.astro';
+
+const { href, label } = Astro.props as { href: string; label: string };
+---
+
+<a class="tlink" href={href}>
+  <Roll text={label} />
+  <Arrow />
+</a>
