@@ -1,0 +1,32 @@
+name: Deploy ke VPS
+
+on:
+  push:
+    branches: [portfolio-site]
+  workflow_dispatch:
+
+concurrency: deploy-site
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Siapkan kunci SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ vars.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+      # Tanpa -p/-g: folder di server memakai setgid grup caddy, dan deploy-daniel bukan anggotanya,
+      # jadi chmod dari rsync akan menghapus setgid dan Caddy tidak bisa membaca file baru.
+      - name: Kirim situs
+        run: |
+          rsync -rltz --delete-delay dist/ \
+            ${{ vars.VPS_USER }}@${{ vars.VPS_HOST }}:/srv/deploy-daniel/portfolio/
