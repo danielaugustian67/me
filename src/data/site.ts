@@ -206,6 +206,31 @@ export const projects = [
     results: [{ value: '45+', label: 'Frame themes' }],
     credits: 'Design and code by danielaugustian.',
   },
+  {
+    slug: 'localpdf',
+    name: 'LocalPDF',
+    year: "'26",
+    tall: img('work-localpdf-tall'),
+    wide: img('reel-localpdf'),
+    summary:
+      'A desktop PDF toolkit for macOS and Windows that works fully offline. Merge, split, sign, compress, convert, and OCR scanned documents without uploading a single file.',
+    scope: 'Electron, React, TypeScript, pdf-lib, PDF.js, Tesseract.js, Playwright.',
+    challenge:
+      'Most PDF tools online ask you to upload contracts, IDs, and receipts to someone else’s server. I wanted the same tools, including OCR for scanned paper, with nothing leaving the computer.',
+    statement: 'Your files never leave your computer.',
+    approach: [
+      'Everything runs inside Electron. pdf-lib and PDF.js handle merging, splitting, page edits, signatures, and redaction, and a strict Content Security Policy blocks every outside connection.',
+      'OCR runs on Tesseract.js in WebAssembly, with the Indonesian and English models shipped inside the app. Pages are cleaned up with Otsu binarization first, then turned into searchable PDFs, Word files, or plain text. Playwright tests cover the tools end to end.',
+    ],
+    gallery: [img('work-localpdf-screens'), img('reel-localpdf')],
+    results: [
+      { value: '16', label: 'PDF tools' },
+      { value: '2', label: 'OCR languages' },
+      { value: '0', label: 'Files uploaded' },
+    ],
+    credits: 'Design and code by danielaugustian.',
+    liveUrl: 'https://localpdf.studiodesign.live',
+  },
 ];
 
 export const about = {
